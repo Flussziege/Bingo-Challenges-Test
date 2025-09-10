@@ -4,13 +4,7 @@
 <meta charset="UTF-8">
 <title>Challenge-Tik-Tac-Toe Multiplayer</title>
 <style>
-body { 
-  font-family: sans-serif; 
-  text-align: center; 
-  margin: 0; 
-  padding: 0; 
-  transition: background 0.5s ease;
-}
+body { font-family: sans-serif; text-align: center; margin: 0; padding: 0; }
 .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
 .grid {
   display: grid;
@@ -76,7 +70,7 @@ input, select, button { font-size:16px; padding:5px; margin:5px; }
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-// 🔹 Firebase config hier einfügen
+// 🔹 Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCDGnsgg1muZSLsiogP0AydwfRMmnL-rC0",
   authDomain: "lol-bingo.firebaseapp.com",
@@ -100,15 +94,65 @@ const playerDisplay = document.getElementById("playerDisplay");
 const gridSizeInput = document.getElementById("gridSize");
 const playerStatsDiv = document.getElementById("playerStats");
 
-// 🔹 Challenge-Pool (gekürzt für Übersicht)
+// 🔹 Challenge-Pool (gekürzt für Übersicht – du kannst alle 81 einsetzen)
 const challengePool = [
-  ["Gold Hunter", "Bekomme ein Shutdown von 700 Gold auf deinen Kopf ausgesetzt."],
+["Gold Hunter", "Bekomme ein Shutdown von 700 Gold auf deinen Kopf ausgesetzt."],
   ["Damage Dealer", "Habe mehr als 50k Schaden."],
   ["Death Count", "Habe mehr als 20 Tode."],
   ["First Strike", "Erhalte First Blood."],
   ["Comeback King", "Gewinne trotz 8k Gold Defizit."],
   ["Swift Turret", "Bekomme einen Turm in unter 8 Minuten."],
-  ["Penta Slayer", "Erziele einen Penta Kill."]
+  ["Penta Slayer", "Erziele einen Penta Kill."],
+  ["Nexus Opener", "Gewinne trotz eines offenen (eigenen) Nexus."],
+  ["CS Machine", "Habe mindestens 9 CS pro Minute."],
+  ["Speedrun Any%", "Gewinne das Spiel in unter 15 Minuten."],
+  ["ULT Trio", "Treffe mindestens 3 Gegner mit deiner Ultimate."],
+  ["Critical Support", "Treffe einen Crit mit Yuumi."],
+  ["Tombstone", "Habe mehr als 3 Tode."],
+  ["Hat Collector", "Sammle mehr als 15 Hüte."],
+  ["Ignite Executioner", "Erziele einen Kill mit Ignite."],
+  ["Flashless Hero", "Spiele das Spiel ohne Flash."],
+  ["Unscathed", "Verlasse einen Teamfight mit voller HP."],
+  ["AP/AD Overload", "Alle Spieler im Team sind FULL AP oder FULL AD."],
+  ["Survivor", "Überlebe 20 Minuten am Stück ohne zu sterben."],
+  ["Barefoot", "Spiele das Spiel ohne Boots."],
+  ["Wind Rider", "Spiele Yasuo."],
+  ["Heartstealer", "Erziele über 500 Stacks durch Heartsteal."],
+  ["I'll do it myself", "Spiele AD Milio erfolgreich."],
+  ["Damage Master", "Habe den meisten Schaden im Spiel."],
+  ["Soul Collector", "Habe ein volles Mejai's Soulstealer aufgebaut."],
+  ["Immortal", "Gewinne ohne zu sterben."]
+  ["Jungle First", "Erreiche als Jungle-Player den First Blood."],
+  ["Tower Dive", "Erledige einen Gegner unter dem Turm."],
+  ["Triple Kill", "Erziele einen Triple Kill in einem Fight."],
+  ["Dragon Steal", "Stehle den Drachen von den Gegnern."],
+  ["Baron Steal", "Stehle den Baron Nashor."],
+  ["Assist King", "Sammle die meisten Assists im Team."],
+  ["Backdoor", "Gewinne durch Backdoor ohne Teamfight."],
+  ["CS Master", "Erreiche 10 CS pro Minute im Spiel."],
+  ["Gold Lead", "Baue einen Goldvorsprung von 5k auf."],
+  ["Epic Save", "Rette ein Teammitglied vor dem Tod."],
+  ["Tower Destroyer", "Zerstöre 3 gegnerische Türme."],
+  ["Item Rush", "Kaufe ein Full-Item-Build zuerst im Team."],
+  ["First Tower", "Nimm den ersten Turm des Spiels."],
+  ["Vision Control", "Erhalte 80 Vision Score"],
+  ["Enemy Jungler Dead", "Töte den gegnerischen Jungler 3x."],
+  ["Lane Domination", "Gewinne deine Lane (min 18) ohne zu sterben."],
+  ["Quick Recall", "Recall unter 10 Sekunden nach Kill."],
+  ["Epic Ult", "Treffe mindestens 3 Gegner mit deiner Ultimate."],
+  ["Champion Master", "Spiele deinen Lieblingschampion perfekt. (keine Tode/Assist)"],
+  ["Soul Sweep", "Sichere ein Objective, ohne dass Gegner einen Drachen bekommen."],
+  ["Last Tower", "Zerstöre den gegnerischen Nexus (mindestens 50 Gold erhalten)."],
+  ["Help?", "Töte Baron Nashor alleine."],
+  ["Dragon Hunter", "Töte 3 Drachen im Spiel."],
+  ["Tower Smacker", "Verursache 10k Schaden an Türmen."],
+  ["Healing Done", "Heile 2000 HP während des Spiels."],
+  ["Solo Baron", "Nimm Baron Nashor fast alleine."],
+  ["Backdoor Genius", "Gewinne das Spiel, während du den Gegner-Turm unbemerkt zerstörst."],
+  ["First Tower Sniper", "Zerstöre den ersten gegnerischen Turm als erstes im Spiel."],
+  ["Flashless Killer", "Erziele einen Kill ohne Flash."],
+  ["Tower Focus", "Verursache 5k Schaden an einem Turm."],
+  ["Heal Overload", "Heile 1500 HP innerhalb von 5 Minuten."]
 ];
 
 // 🔹 Zufällige Auswahl
@@ -120,9 +164,8 @@ function getRandomChallenges(pool, count) {
 let playerName = "";
 let playerColor = "";
 let gridSize = 5;
-let challenges = [];
 
-// Start Spiel
+// Start Spiel (setzt Grid global in DB)
 startBtn.addEventListener("click",()=>{
   if(!nameInput.value.trim()){alert("Bitte gib deinen Namen ein!");return;}
   playerName=nameInput.value.trim();
@@ -130,7 +173,7 @@ startBtn.addEventListener("click",()=>{
   gridSize=parseInt(gridSizeInput.value);
   playerDisplay.textContent=`Du bist ${playerName} (${playerColor})`;
 
-  // Hintergrundfarbe mit Muster setzen
+  // 🔹 Hintergrundfarbe mit Muster in Spielerfarbe
   document.body.style.background = `repeating-linear-gradient(
     45deg,
     ${playerColor}33,
@@ -139,20 +182,20 @@ startBtn.addEventListener("click",()=>{
     ${playerColor}11 40px
   )`;
 
-  // Zufällige Challenges für das Spiel auswählen
+  // Grid in Firebase speichern
   const totalFields = gridSize * gridSize;
-  challenges = getRandomChallenges(challengePool, totalFields);
+  const challenges = getRandomChallenges(challengePool, totalFields);
+  set(ref(db,"grid"),{ gridSize, challenges });
 
-  set(ref(db,"gridSize"),gridSize);
   nameInput.style.display="none";
   colorInput.style.display="none";
   gridSizeInput.style.display="none";
   startBtn.style.display="none";
-  createGrid(gridSize);
 });
 
+
 // Grid erstellen
-function createGrid(size){
+function createGrid(size,challenges){
   grid.innerHTML="";
   grid.style.gridTemplateColumns=`repeat(${size},96px)`;
   const total=size*size;
@@ -166,9 +209,108 @@ function createGrid(size){
     cell.dataset.challengeLong=longText;
     cell.title=longText;
     cell.textContent=shortText;
+
+    cell.addEventListener("click", async (e)=>{
+      const fieldRef = ref(db,"board/"+i);
+      const snap = await new Promise(res=>onValue(fieldRef,s=>{res(s);}, {onlyOnce:true}));
+      const fieldData = snap.val() || { players:{} };
+      const players = fieldData.players || {};
+      const exclusivePlayer = fieldData.exclusivePlayer || null;
+      const isSelected = players[playerName] !== undefined;
+
+      if(e.detail === 2){
+        if(exclusivePlayer && exclusivePlayer !== playerName) return;
+        set(fieldRef, { players: { [playerName]: { color: playerColor } }, exclusivePlayer: playerName });
+      } else {
+        if(isSelected){
+          remove(ref(db,"board/"+i+"/players/"+playerName));
+          if(exclusivePlayer === playerName){
+            update(fieldRef,{exclusivePlayer:null});
+          }
+        } else {
+          if(exclusivePlayer) return;
+          set(ref(db,"board/"+i+"/players/"+playerName), {color: playerColor, exclusive:false});
+        }
+      }
+    });
+
     grid.appendChild(cell);
   }
 }
+
+// Kontrastfarbe
+function getContrastYIQ(hex){
+  hex=hex.replace("#","");
+  const r=parseInt(hex.substr(0,2),16);
+  const g=parseInt(hex.substr(2,2),16);
+  const b=parseInt(hex.substr(4,2),16);
+  const yiq=((r*299)+(g*587)+(b*114))/1000;
+  return yiq>=128?"black":"white";
+}
+
+// Listener für Grid und Board
+onValue(ref(db,"grid"), snap=>{
+  if(snap.exists()){
+    const { gridSize: size, challenges } = snap.val();
+    gridSize=size;
+    createGrid(size,challenges);
+  }
+});
+
+onValue(ref(db,"board"), snapshot=>{
+  const board = snapshot.val()||{};
+  document.querySelectorAll(".cell").forEach(cell=>{
+    const idx = cell.dataset.index;
+    const field = board[idx];
+    cell.style.border="2px solid #333";
+    cell.style.background="#fff";
+    cell.style.color="black";
+
+    if(field && field.players){
+      const playerArr = Object.entries(field.players);
+      if(field.exclusivePlayer){
+        const player = field.exclusivePlayer;
+        cell.style.backgroundColor = field.players[player].color;
+        cell.style.border="3px solid gold";
+        cell.style.color=getContrastYIQ(field.players[player].color);
+      } else if(playerArr.length>0){
+        const colors = playerArr.map(([name,p])=>p.color);
+        const percent = 100 / colors.length;
+        const gradient = colors.map((c,i)=>`${c} ${i*percent}% ${(i+1)*percent}%`).join(', ');
+        cell.style.background = `linear-gradient(to right, ${gradient})`;
+        cell.style.color="black";
+      }
+    }
+  });
+
+  // Spielerstatistik
+  const playerCounts = {};
+  Object.values(board).forEach(field=>{
+    if(field.players){
+      Object.keys(field.players).forEach(p=>{
+        if(!playerCounts[p]) playerCounts[p]=0;
+        playerCounts[p]++;
+      });
+    }
+  });
+  let statsHTML = "<ul>";
+  for(const [name,count] of Object.entries(playerCounts)){
+    let color="#000";
+    for(const field of Object.values(board)){
+      if(field.players && field.players[name]){ color=field.players[name].color; break; }
+    }
+    statsHTML += `<li><span style="color:${color}">${name}</span>: ${count} Feld${count>1?"er":""}</li>`;
+  }
+  statsHTML += "</ul>";
+  playerStatsDiv.innerHTML = statsHTML;
+});
+
+// Reset: löscht Board und Grid
+resetBtn.addEventListener("click",()=>{
+  remove(ref(db,"board"));
+  remove(ref(db,"grid"));
+});
 </script>
 </body>
 </html>
+
