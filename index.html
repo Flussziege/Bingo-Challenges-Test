@@ -2,9 +2,15 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Challenge-Tik-Tac-Toe Multiplayer (Test)</title>
+<title>Challenge-Tik-Tac-Toe Multiplayer</title>
 <style>
-body { font-family: sans-serif; text-align: center; margin: 0; padding: 0; }
+body { 
+  font-family: sans-serif; 
+  text-align: center; 
+  margin: 0; 
+  padding: 0; 
+  transition: background 0.5s ease;
+}
 .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
 .grid {
   display: grid;
@@ -39,7 +45,7 @@ input, select, button { font-size:16px; padding:5px; margin:5px; }
 </head>
 <body>
 <div class="container">
-<h1>Challenge-Tik-Tac-Toe Multiplayer (Test)</h1>
+<h1>Challenge-Tik-Tac-Toe Multiplayer</h1>
 
 <div>
 <input type="text" id="nameInput" placeholder="Spielername eingeben"><br>
@@ -70,22 +76,21 @@ input, select, button { font-size:16px; padding:5px; margin:5px; }
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-// 🔹 Dein neues Firebase Test-Projekt
+// 🔹 Firebase config hier einfügen
 const firebaseConfig = {
-  apiKey: "AIzaSyC0DM0bdEMGjREUfC4ahdm7-kumaHxzC3c",
-  authDomain: "lol-bingo-test.firebaseapp.com",
-  databaseURL: "https://lol-bingo-test-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "lol-bingo-test",
-  storageBucket: "lol-bingo-test.appspot.com",
-  messagingSenderId: "982372013204",
-  appId: "1:982372013204:web:494dea8328497744bdd081"
+  apiKey: "AIzaSyCDGnsgg1muZSLsiogP0AydwfRMmnL-rC0",
+  authDomain: "lol-bingo.firebaseapp.com",
+  databaseURL: "https://lol-bingo-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "lol-bingo",
+  storageBucket: "lol-bingo.firebasestorage.app",
+  messagingSenderId: "346023051769",
+  appId: "1:346023051769:web:3bd5bfa276189114d93d28",
+  measurementId: "G-MZ52BB5PD5"
 };
-
-// Test-App Instanz initialisieren
-const firebaseApp = initializeApp(firebaseConfig, "testApp");
+const firebaseApp = initializeApp(firebaseConfig);
 const db = getDatabase(firebaseApp);
 
-// 🔹 DOM Elemente
+// DOM Elemente
 const grid = document.getElementById("grid");
 const resetBtn = document.getElementById("resetBtn");
 const startBtn = document.getElementById("startBtn");
@@ -95,7 +100,7 @@ const playerDisplay = document.getElementById("playerDisplay");
 const gridSizeInput = document.getElementById("gridSize");
 const playerStatsDiv = document.getElementById("playerStats");
 
-// 🔹 Challenge-Pool (gekürzt für Test)
+// 🔹 Challenge-Pool (gekürzt für Übersicht)
 const challengePool = [
   ["Gold Hunter", "Bekomme ein Shutdown von 700 Gold auf deinen Kopf ausgesetzt."],
   ["Damage Dealer", "Habe mehr als 50k Schaden."],
@@ -103,10 +108,7 @@ const challengePool = [
   ["First Strike", "Erhalte First Blood."],
   ["Comeback King", "Gewinne trotz 8k Gold Defizit."],
   ["Swift Turret", "Bekomme einen Turm in unter 8 Minuten."],
-  ["Penta Slayer", "Erziele einen Penta Kill."],
-  ["Nexus Opener", "Gewinne trotz eines offenen (eigenen) Nexus."],
-  ["CS Machine", "Habe mindestens 9 CS pro Minute."],
-  ["Speedrun Any%", "Gewinne das Spiel in unter 15 Minuten."]
+  ["Penta Slayer", "Erziele einen Penta Kill."]
 ];
 
 // 🔹 Zufällige Auswahl
@@ -128,12 +130,20 @@ startBtn.addEventListener("click",()=>{
   gridSize=parseInt(gridSizeInput.value);
   playerDisplay.textContent=`Du bist ${playerName} (${playerColor})`;
 
+  // Hintergrundfarbe mit Muster setzen
+  document.body.style.background = `repeating-linear-gradient(
+    45deg,
+    ${playerColor}33,
+    ${playerColor}33 20px,
+    ${playerColor}11 20px,
+    ${playerColor}11 40px
+  )`;
+
+  // Zufällige Challenges für das Spiel auswählen
   const totalFields = gridSize * gridSize;
   challenges = getRandomChallenges(challengePool, totalFields);
 
   set(ref(db,"gridSize"),gridSize);
-  set(ref(db,"challenges"), challenges);
-
   nameInput.style.display="none";
   colorInput.style.display="none";
   gridSizeInput.style.display="none";
@@ -159,20 +169,6 @@ function createGrid(size){
     grid.appendChild(cell);
   }
 }
-
-// Firebase Listener → Spielfeld & Challenges laden
-onValue(ref(db), snapshot=>{
-  const data = snapshot.val()||{};
-  const size = data.gridSize||gridSize;
-  if(size!==gridSize){gridSize=size;}
-  if(data.challenges){challenges=data.challenges;}
-  createGrid(gridSize);
-});
-
-// Reset
-resetBtn.addEventListener("click",()=>{
-  remove(ref(db));
-});
 </script>
 </body>
 </html>
