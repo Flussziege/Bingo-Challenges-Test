@@ -360,11 +360,16 @@ onValue(ref(db,"board"), snapshot=>{
 });
 
 // Reset: löscht Board und Grid
-resetBtn.addEventListener("click",()=>{
-  remove(ref(db,"board"));
-  remove(ref(db,"grid"));
+resetBtn.addEventListener("click", ()=>{
+  remove(ref(db,"board")); // altes Board löschen
+  const totalFields = gridSize * gridSize;
+  let newChallenges = getRandomChallenges(challengePool, totalFields);
+  newChallenges = newChallenges.sort(() => 0.5 - Math.random()); // nochmals mischen
+  set(ref(db,"grid"), { gridSize, challenges: newChallenges }); // neues Grid speichern
 });
+
 </script>
 </body>
 </html>
+
 
