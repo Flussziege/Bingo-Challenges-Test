@@ -35,42 +35,6 @@ input, select, button { font-size:16px; padding:5px; margin:5px; }
 @media (max-width:600px){
   .cell { width: 60px; height: 60px; font-size:12px; }
 }
-  .container-flex {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 20px; /* Abstand zwischen Spieler-Legende und Grid */
-}
-
-#playerStats ul {
-  list-style: none;
-  padding: 0;
-  font-size: 18px; /* größerer Text */
-}
-
-#playerStats li {
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px; /* Abstand zwischen Farbkreis und Name/Punkte */
-}
-
-.color-circle {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%; /* rund */
-  display: inline-block;
-}
-  .color-circle {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 8px;
-}
-#playerStats ul { list-style: none; padding: 0; font-size: 18px; }
-#playerStats li { margin-bottom: 8px; display: flex; align-items: center; }
-
 </style>
 </head>
 <body>
@@ -107,14 +71,12 @@ input, select, button { font-size:16px; padding:5px; margin:5px; }
 </div>
 
 <p id="playerDisplay"></p>
-
-<div class="container-flex">
-  <div id="playerStats"></div> <!-- links: Legende & Punkte -->
-  <div class="grid" id="grid"></div> <!-- rechts: Grid -->
-</div>
-
+<div class="grid" id="grid"></div>
 <button id="resetBtn">🔄 Neues Spiel starten</button>
 
+<h2>Spielerübersicht</h2>
+<div id="playerStats"></div>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
@@ -398,23 +360,23 @@ onValue(ref(db,"board"), snapshot=>{
     }
   });
 
-let legendHTML = "<ul>";
-allPlayers.forEach(name=>{
-  let color = "#000";
-  if(Object.values(board).some(f=>f.players && f.players[name])) {
-    for(const f of Object.values(board)){
-      if(f.players && f.players[name]){
-        color = f.players[name].color;
-        break;
+  let legendHTML = "<ul style='list-style:none;padding:0'>";
+  allPlayers.forEach(name=>{
+    let color = "#000";
+    if(Object.values(board).some(f=>f.players && f.players[name])) {
+      for(const f of Object.values(board)){
+        if(f.players && f.players[name]){
+          color = f.players[name].color;
+          break;
+        }
       }
     }
-  }
-  const points = playerCounts[name] || 0;
-  legendHTML += `<li><span class="color-circle" style="background:${color}"></span> ${name}: ${points} Punkte</li>`;
+    const points = playerCounts[name] || 0;
+    legendHTML += `<li><span style="display:inline-block;width:12px;height:12px;background:${color};margin-right:5px;"></span> ${name}: ${points} Punkte</li>`;
+  });
+  legendHTML += "</ul>";
+  playerStatsDiv.innerHTML = legendHTML;
 });
-legendHTML += "</ul>";
-playerStatsDiv.innerHTML = legendHTML;
-
 
 
 // Reset: löscht Board und Grid
@@ -429,7 +391,5 @@ resetBtn.addEventListener("click", ()=>{
 </script>
 </body>
 </html>
-
-
 
 
