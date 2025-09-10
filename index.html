@@ -35,14 +35,13 @@ body { font-family: sans-serif; margin: 0; padding: 0; }
   display: flex; 
   flex-direction: column; 
   font-size: 18px; 
+  min-width: 180px;
+  margin-top: 20px;
 }
 #playerStats ul { list-style: none; padding: 0; margin:0; }
 #playerStats li { margin-bottom: 10px; display: flex; align-items: center; }
 .color-circle { width: 24px; height: 24px; border-radius: 50%; display: inline-block; margin-right: 10px; }
-input, select, button { font-size:16px; padding:5px; margin:5px; }
-@media (max-width:600px){
-  .cell { width: 60px; height: 60px; font-size:12px; }
-  .color-circle { width: 16px; height: 16px; }
+
 }
 </style>
 </head>
@@ -277,28 +276,36 @@ onValue(ref(db,"board"), snapshot=>{
   });
 
   // Spieler-Legende & Punkte
-  const playerCounts={};
-  Object.values(board).forEach(f=>{
-    if(f.players) Object.keys(f.players).forEach(p=>{ playerCounts[p]=(playerCounts[p]||0)+1; });
-  });
-
-  const allPlayers = new Set(Object.keys(playerCounts));
-  Object.values(board).forEach(f=>{
-    if(f.players) Object.keys(f.players).forEach(p=>allPlayers.add(p));
-  });
-
-  let legendHTML = "<ul>";
-  allPlayers.forEach(name=>{
-    let color="#000";
-    for(const f of Object.values(board)){
-      if(f.players && f.players[name]){ color=f.players[name].color; break; }
-    }
-    const points = playerCounts[name]||0;
-    legendHTML+=`<li><span class="color-circle" style="background:${color}"></span>${name}: ${points} Punkte</li>`;
-  });
-  legendHTML+="</ul>";
-  playerStatsDiv.innerHTML = legendHTML;
+// Spieler-Legende & Punkte (alle Spieler, auch mit 0)
+let allPlayers = new Set();
+// 1. Spieler aus Board
+Object.values(board).forEach(f=>{
+  if(f.players) Object.keys(f.players).forEach(p=>allPlayers.add(p));
 });
+// 2. Spieler aus Startliste (hier nur aktueller Spieler als Beispiel)
+if(playerName) allPlayers.add(playerName);
+
+// Punkte zählen
+const playerCounts={};
+Object.values(board).forEach(f=>{
+  if(f.players) Object.keys(f.players).forEach(p=>{
+    playerCounts[p] = (playerCounts[p]||0)+1;
+  });
+});
+
+// HTML erstellen
+let legendHTML = "<ul>";
+allPlayers.forEach(name=>{
+  let color = "#000";
+  for(const f of Object.values(board)){
+    if(f.players && f.players[name]){ color=f.players[name].color; break; }
+  }
+  const points = playerCounts[name] || 0;
+  legendHTML+=`<li><span class="color-circle" style="background:${color}"></span><span style="font-weight:bold">${name}</span>: ${points} Punkte</li>`;
+});
+legendHTML+="</ul>";
+playerStatsDiv.innerHTML = legendHTML;
+
 
 // 🔹 Reset Button
 resetBtn.addEventListener("click", ()=>{
@@ -312,3 +319,4 @@ resetBtn.addEventListener("click", ()=>{
 </script>
 </body>
 </html>
+
