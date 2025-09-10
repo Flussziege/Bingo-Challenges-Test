@@ -79,18 +79,17 @@ input, select, button { font-size:16px; padding:5px; margin:5px; }
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getDatabase, ref, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-// 🔹 Firebase config
+// 🔹 Firebase config (Test-DB einsetzen!)
 const firebaseConfig = {
-  apiKey: "AIzaSyCDGnsgg1muZSLsiogP0AydwfRMmnL-rC0",
-  authDomain: "lol-bingo.firebaseapp.com",
-  databaseURL: "https://lol-bingo-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "lol-bingo",
-  storageBucket: "lol-bingo.firebasestorage.app",
-  messagingSenderId: "346023051769",
-  appId: "1:346023051769:web:3bd5bfa276189114d93d28",
-  measurementId: "G-MZ52BB5PD5"
+  apiKey: "AIzaSyC0DM0bdEMGjREUfC4ahdm7-kumaHxzC3c",
+  authDomain: "lol-bingo-test.firebaseapp.com",
+  databaseURL: "https://lol-bingo-test-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "lol-bingo-test",
+  storageBucket: "lol-bingo-test.firebasestorage.app",
+  messagingSenderId: "982372013204",
+  appId: "1:982372013204:web:494dea8328497744bdd081"
 };
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getDatabase(firebaseApp);
@@ -119,7 +118,9 @@ function setBackgroundPattern(color, pattern) {
       )`;
       break;
     case "checker":
-      document.body.style.background = `linear-gradient(135deg, ${color}22 25%, transparent 25%, transparent 50%, ${color}22 50%, ${color}22 75%, transparent 75%, transparent)`;
+      document.body.style.background = `
+        conic-gradient(${color}33 25%, transparent 0 50%, ${color}33 0 75%, transparent 0)
+      `;
       document.body.style.backgroundSize = "40px 40px";
       break;
     case "dots":
@@ -141,6 +142,19 @@ let playerName = "";
 let playerColor = "";
 let gridSize = 5;
 
+// Grid rendern
+function renderGrid(size) {
+  grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+  grid.innerHTML = "";
+  for (let i=0;i<size*size;i++) {
+    const cell=document.createElement("div");
+    cell.className="cell";
+    cell.textContent=`Feld ${i+1}`;
+    cell.addEventListener("click",()=>{ cell.style.backgroundColor=playerColor; });
+    grid.appendChild(cell);
+  }
+}
+
 // 🔹 Spiel starten
 startBtn.addEventListener("click",()=>{
   if(!nameInput.value.trim()){alert("Bitte gib deinen Namen ein!");return;}
@@ -153,10 +167,11 @@ startBtn.addEventListener("click",()=>{
   // Hintergrund setzen
   setBackgroundPattern(playerColor, chosenPattern);
 
-  // Grid in Firebase speichern
-  const totalFields = gridSize * gridSize;
-  const challenges = [["Demo","Challenge hier einsetzen"]]; // Challengepool einsetzen!
-  set(ref(db,"grid"),{ gridSize, challenges });
+  // Grid anzeigen
+  renderGrid(gridSize);
+
+  // DB setzen
+  set(ref(db,"grid"),{ gridSize });
 
   nameInput.style.display="none";
   colorInput.style.display="none";
