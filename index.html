@@ -313,6 +313,8 @@ onValue(ref(db,"grid"), snap=>{
 
 onValue(ref(db,"board"), snapshot=>{
   const board = snapshot.val()||{};
+  
+  // Grid-Farben aktualisieren
   document.querySelectorAll(".cell").forEach(cell=>{
     const idx = cell.dataset.index;
     const field = board[idx];
@@ -337,27 +339,45 @@ onValue(ref(db,"board"), snapshot=>{
     }
   });
 
-  // Spielerstatistik
+  // Spieler-Legende & Punkte
   const playerCounts = {};
   Object.values(board).forEach(field=>{
     if(field.players){
       Object.keys(field.players).forEach(p=>{
-        if(!playerCounts[p]) playerCounts[p]=0;
+        if(!playerCounts[p]) playerCounts[p] = 0;
         playerCounts[p]++;
       });
     }
   });
-  let statsHTML = "<ul>";
-  for(const [name,count] of Object.entries(playerCounts)){
-    let color="#000";
-    for(const field of Object.values(board)){
-      if(field.players && field.players[name]){ color=field.players[name].color; break; }
+
+  // Alle Spieler aus Firebase (oder aktuelle Session) berücksichtigen
+  const allPlayers = new Set(Object.keys(playerCounts));
+  Object.values(board).forEach(field=>{
+    if(field.players){
+      Object.keys(field.players).forEach(p=>{
+        allPlayers.add(p);
+      });
     }
-    statsHTML += `<li><span style="color:${color}">${name}</span>: ${count} Feld${count>1?"er":""}</li>`;
-  }
-  statsHTML += "</ul>";
-  playerStatsDiv.innerHTML = statsHTML;
+  });
+
+  let legendHTML = "<ul style='list-style:none;padding:0'>";
+  allPlayers.forEach(name=>{
+    let color = "#000";
+    if(Object.values(board).some(f=>f.players && f.players[name])) {
+      for(const f of Object.values(board)){
+        if(f.players && f.players[name]){
+          color = f.players[name].color;
+          break;
+        }
+      }
+    }
+    const points = playerCounts[name] || 0;
+    legendHTML += `<li><span style="display:inline-block;width:12px;height:12px;background:${color};margin-right:5px;"></span> ${name}: ${points} Punkte</li>`;
+  });
+  legendHTML += "</ul>";
+  playerStatsDiv.innerHTML = legendHTML;
 });
+
 
 // Reset: löscht Board und Grid
 resetBtn.addEventListener("click", ()=>{
@@ -371,5 +391,6 @@ resetBtn.addEventListener("click", ()=>{
 </script>
 </body>
 </html>
+
 
 
