@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Challenge-Tik-Tac-Toe Multiplayer (Test)</title>
+<style>
+body { font-family: sans-serif; text-align: center; margin: 0; padding: 0; }
+.container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+.grid {
+  display: grid;
+  gap: 5px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #333;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+  padding: 5px;
+  box-sizing: border-box;
+  width: 96px; 
+  height: 96px;
+  color: black;
+  word-wrap: break-word;
+  position: relative;
+  user-select: none;
+  background-color: #fff;
+}
+input, select, button { font-size:16px; padding:5px; margin:5px; }
+#playerStats { margin-top: 20px; text-align: left; display:inline-block; }
+@media (max-width:600px){
+  .cell { width: 60px; height: 60px; font-size:12px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Challenge-Tik-Tac-Toe Multiplayer (Test)</h1>
+
+<div>
+<input type="text" id="nameInput" placeholder="Spielername eingeben"><br>
+<input type="color" id="colorInput" value="#3498db"><br>
+<label>Feldgröße:
+  <select id="gridSize">
+    <option value="3">3x3</option>
+    <option value="4">4x4</option>
+    <option value="5" selected>5x5</option>
+    <option value="6">6x6</option>
+    <option value="7">7x7</option>
+    <option value="8">8x8</option>
+    <option value="9">9x9</option>
+  </select>
+</label><br>
+<button id="startBtn">Spiel starten</button>
+</div>
+
+<p id="playerDisplay"></p>
+<div class="grid" id="grid"></div>
+<button id="resetBtn">🔄 Neues Spiel starten</button>
+
+<h2>Spielerübersicht</h2>
+<div id="playerStats"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+// 🔹 Dein neues Firebase Test-Projekt
+const firebaseConfig = {
+  apiKey: "AIzaSyC0DM0bdEMGjREUfC4ahdm7-kumaHxzC3c",
+  authDomain: "lol-bingo-test.firebaseapp.com",
+  databaseURL: "https://lol-bingo-test-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "lol-bingo-test",
+  storageBucket: "lol-bingo-test.appspot.com",
+  messagingSenderId: "982372013204",
+  appId: "1:982372013204:web:494dea8328497744bdd081"
+};
+
+// Test-App Instanz initialisieren
+const firebaseApp = initializeApp(firebaseConfig, "testApp");
+const db = getDatabase(firebaseApp);
+
+// 🔹 DOM Elemente
+const grid = document.getElementById("grid");
+const resetBtn = document.getElementById("resetBtn");
+const startBtn = document.getElementById("startBtn");
+const nameInput = document.getElementById("nameInput");
+const colorInput = document.getElementById("colorInput");
+const playerDisplay = document.getElementById("playerDisplay");
+const gridSizeInput = document.getElementById("gridSize");
+const playerStatsDiv = document.getElementById("playerStats");
+
+// 🔹 Challenge-Pool (gekürzt für Test)
+const challengePool = [
+  ["Gold Hunter", "Bekomme ein Shutdown von 700 Gold auf deinen Kopf ausgesetzt."],
+  ["Damage Dealer", "Habe mehr als 50k Schaden."],
+  ["Death Count", "Habe mehr als 20 Tode."],
+  ["First Strike", "Erhalte First Blood."],
+  ["Comeback King", "Gewinne trotz 8k Gold Defizit."],
+  ["Swift Turret", "Bekomme einen Turm in unter 8 Minuten."],
+  ["Penta Slayer", "Erziele einen Penta Kill."],
+  ["Nexus Opener", "Gewinne trotz eines offenen (eigenen) Nexus."],
+  ["CS Machine", "Habe mindestens 9 CS pro Minute."],
+  ["Speedrun Any%", "Gewinne das Spiel in unter 15 Minuten."]
+];
+
+// 🔹 Zufällige Auswahl
+function getRandomChallenges(pool, count) {
+  const shuffled = [...pool].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count);
+}
+
+let playerName = "";
+let playerColor = "";
+let gridSize = 5;
+let challenges = [];
+
+// Start Spiel
+startBtn.addEventListener("click",()=>{
+  if(!nameInput.value.trim()){alert("Bitte gib deinen Namen ein!");return;}
+  playerName=nameInput.value.trim();
+  playerColor=colorInput.value;
+  gridSize=parseInt(gridSizeInput.value);
+  playerDisplay.textContent=`Du bist ${playerName} (${playerColor})`;
+
+  const totalFields = gridSize * gridSize;
+  challenges = getRandomChallenges(challengePool, totalFields);
+
+  set(ref(db,"gridSize"),gridSize);
+  set(ref(db,"challenges"), challenges);
+
+  nameInput.style.display="none";
+  colorInput.style.display="none";
+  gridSizeInput.style.display="none";
+  startBtn.style.display="none";
+  createGrid(gridSize);
+});
+
+// Grid erstellen
+function createGrid(size){
+  grid.innerHTML="";
+  grid.style.gridTemplateColumns=`repeat(${size},96px)`;
+  const total=size*size;
+  for(let i=0;i<total;i++){
+    const cell=document.createElement("div");
+    cell.classList.add("cell");
+    cell.dataset.index=i;
+    const shortText=challenges[i]?challenges[i][0]:"";
+    const longText=challenges[i]?challenges[i][1]:"";
+    cell.dataset.challengeShort=shortText;
+    cell.dataset.challengeLong=longText;
+    cell.title=longText;
+    cell.textContent=shortText;
+    grid.appendChild(cell);
+  }
+}
+
+// Firebase Listener → Spielfeld & Challenges laden
+onValue(ref(db), snapshot=>{
+  const data = snapshot.val()||{};
+  const size = data.gridSize||gridSize;
+  if(size!==gridSize){gridSize=size;}
+  if(data.challenges){challenges=data.challenges;}
+  createGrid(gridSize);
+});
+
+// Reset
+resetBtn.addEventListener("click",()=>{
+  remove(ref(db));
+});
+</script>
+</body>
+</html>
