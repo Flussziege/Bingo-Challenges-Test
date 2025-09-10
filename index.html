@@ -181,6 +181,8 @@ startBtn.addEventListener("click",()=>{
     ${playerColor}11 20px,
     ${playerColor}11 40px
   )`;
+  document.body.style.backgroundAttachment = "fixed";   // Fixiert den Hintergrund
+  document.body.style.backgroundSize = "40px 40px";
 
   // Grid in Firebase speichern
   const totalFields = gridSize * gridSize;
@@ -313,4 +315,5 @@ resetBtn.addEventListener("click",()=>{
 </script>
 </body>
 </html>
+
 
