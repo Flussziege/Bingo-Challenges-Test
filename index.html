@@ -320,20 +320,21 @@ onValue(ref(db,"board"), snapshot => {
     cell.style.color = "black";
 
     if (field && field.players) {
-      const playerArr = Object.entries(field.players);
-      if (field.exclusivePlayer) {
-        const player = field.exclusivePlayer;
-        cell.style.backgroundColor = field.players[player].color;
-        cell.style.color = getContrastYIQ(field.players[player].color);
-      } else if (playerArr.length > 0) {
-        const colors = playerArr.map(([n, p]) => p.color);
-        const percent = 100 / colors.length;
-        const gradient = colors.map((c, i) => `${c} ${i*percent}% ${(i+1)*percent}%`).join(", ");
-        cell.style.background = `linear-gradient(to right, ${gradient})`;
-        cell.style.color = "black";
-      }
+  const playerArr = Object.entries(field.players);
+  if (field.exclusivePlayer) {
+    const player = field.exclusivePlayer;
+    cell.style.backgroundColor = field.players[player].color;
+    // Rahmen nicht anzeigen, nur Hintergrundfarbe für exklusiv
+    cell.style.color = getContrastYIQ(field.players[player].color);
+  } else if (playerArr.length > 0) {
+    const colors = playerArr.map(([n, p]) => p.color);
+    const percent = 100 / colors.length;
+    const gradient = colors.map((c, i) => `${c} ${i*percent}% ${(i+1)*percent}%`).join(", ");
+    cell.style.background = `linear-gradient(to right, ${gradient})`;
+    cell.style.color = "black";
     }
-  });
+    }
+});
 
   // 🔹 Spieler-Legende & Punkte
   const playerCounts = {};
@@ -391,6 +392,7 @@ resetBtn.addEventListener("click", ()=>{
 </script>
 </body>
 </html>
+
 
 
 
