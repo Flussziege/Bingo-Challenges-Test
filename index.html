@@ -50,6 +50,10 @@ input, select, button { font-size:16px; padding:5px; margin:5px; }
   .cell { width: 60px; height: 60px; font-size:12px; }
   .color-circle { width: 16px; height: 16px; }
 }
+#spacer {
+  visibility: hidden;
+}
+
 </style>
 </head>
 <body>
@@ -89,6 +93,7 @@ input, select, button { font-size:16px; padding:5px; margin:5px; }
 <div class="game-area">
   <div id="playerStats"></div>
   <div class="grid" id="grid"></div>
+  <div id="spacer"></div> <!-- unsichtbare Box rechts -->
 </div>
 
 <button id="resetBtn">🔄 Neues Spiel starten</button>
@@ -370,6 +375,9 @@ onValue(ref(db,"board"), snapshot => {
   });
   legendHTML += "</ul>";
   playerStatsDiv.innerHTML = legendHTML;
+  const spacer = document.getElementById("spacer");
+spacer.style.width = `${playerStatsDiv.offsetWidth}px`;
+
 });
 // 🔹 Reset Button
 resetBtn.addEventListener("click", ()=>{
@@ -383,6 +391,7 @@ resetBtn.addEventListener("click", ()=>{
 </script>
 </body>
 </html>
+
 
 
 
