@@ -4,13 +4,14 @@
 <meta charset="UTF-8">
 <title>Challenge-Tik-Tac-Toe Multiplayer</title>
 <style>
-body { font-family: sans-serif; margin: 0; padding: 0; }
-.container { max-width: 1000px; margin: 0 auto; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-.controls { margin-bottom: 20px; }
+body { font-family: sans-serif; text-align: center; margin: 0; padding: 0; }
+.container { max-width: 1000px; margin: 0 auto; padding: 20px; }
 .game-area { display: flex; justify-content: center; align-items: flex-start; gap: 40px; width: 100%; }
 .grid {
   display: grid;
   gap: 5px;
+  justify-content: center;
+  margin-top: 20px;
 }
 .cell {
   display: flex;
@@ -30,6 +31,7 @@ body { font-family: sans-serif; margin: 0; padding: 0; }
   user-select: none;
   background-color: #fff;
 }
+input, select, button { font-size:16px; padding:5px; margin:5px; }
 #playerStats { 
   text-align: left; 
   display: flex; 
@@ -40,24 +42,22 @@ body { font-family: sans-serif; margin: 0; padding: 0; }
 #playerStats li {
   margin-bottom: 10px;
   display: flex;
-  align-items: center; 
-  gap: 8px;            
-  box-sizing: border-box; 
+  align-items: center;
+  gap: 8px;
 }
 .color-circle { width: 24px; height: 24px; border-radius: 50%; display: inline-block; margin-right: 10px; }
-input, select, button { font-size:16px; padding:5px; margin:5px; }
+#spacer { visibility: hidden; }
 @media (max-width:600px){
   .cell { width: 60px; height: 60px; font-size:12px; }
   .color-circle { width: 16px; height: 16px; }
 }
-#spacer { visibility: hidden; }
 </style>
 </head>
 <body>
 <div class="container">
 <h1>Challenge-Tik-Tac-Toe Multiplayer</h1>
 
-<div class="controls">
+<div>
 <input type="text" id="nameInput" placeholder="Spielername eingeben"><br>
 <input type="color" id="colorInput" value="#3498db"><br>
 
@@ -99,13 +99,13 @@ input, select, button { font-size:16px; padding:5px; margin:5px; }
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
-// Firebase config
+// 🔹 Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCDGnsgg1muZSLsiogP0AydwfRMmnL-rC0",
   authDomain: "lol-bingo.firebaseapp.com",
   databaseURL: "https://lol-bingo-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "lol-bingo",
-  storageBucket: "lol-bingo.appspot.com",
+  storageBucket: "lol-bingo.firebasestorage.app",
   messagingSenderId: "346023051769",
   appId: "1:346023051769:web:3bd5bfa276189114d93d28",
   measurementId: "G-MZ52BB5PD5"
@@ -113,7 +113,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getDatabase(firebaseApp);
 
-// DOM
+// DOM Elemente
 const grid = document.getElementById("grid");
 const resetBtn = document.getElementById("resetBtn");
 const startBtn = document.getElementById("startBtn");
@@ -124,9 +124,9 @@ const gridSizeInput = document.getElementById("gridSize");
 const playerStatsDiv = document.getElementById("playerStats");
 const patternSelect = document.getElementById("patternSelect");
 
-// Challenges
+// 🔹 Challenge-Pool
 const challengePool = [
-["Gold Hunter", "Bekomme ein Shutdown von 700 Gold auf deinen Kopf ausgesetzt."],
+  ["Gold Hunter", "Bekomme ein Shutdown von 700 Gold auf deinen Kopf ausgesetzt."],
   ["Damage Dealer", "Habe mehr als 50k Schaden."],
   ["Death Count", "Habe mehr als 20 Tode."],
   ["First Strike", "Erhalte First Blood."],
@@ -184,9 +184,8 @@ const challengePool = [
   ["Tower Focus", "Verursache 5k Schaden an einem Turm."],
   ["Heal Overload", "Heile 1500 HP innerhalb von 5 Minuten."]
 ];
-];
 
-// Zufall
+// 🔹 Zufällige Auswahl
 function getRandomChallenges(pool, count) {
   const shuffled = [...pool].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
@@ -195,8 +194,9 @@ function getRandomChallenges(pool, count) {
 let playerName = "";
 let playerColor = "";
 let gridSize = 5;
+const patternSelectEl = document.getElementById("patternSelect");
 
-// Hintergrund
+// 🔹 Hintergrundmuster
 function setBackgroundPattern(color, pattern){
   switch(pattern){
     case "stripes":
@@ -221,14 +221,15 @@ function setBackgroundPattern(color, pattern){
   document.body.style.backgroundAttachment="fixed";
 }
 
-// Start
+// 🔹 Start Button
 startBtn.addEventListener("click",()=>{
   if(!nameInput.value.trim()){alert("Bitte gib deinen Namen ein!"); return;}
-  playerName=nameInput.value.trim();
-  playerColor=colorInput.value;
-  gridSize=parseInt(gridSizeInput.value);
+  playerName = nameInput.value.trim();
+  playerColor = colorInput.value;
+  gridSize = parseInt(gridSizeInput.value);
   const pattern = patternSelect.value;
-  playerDisplay.textContent=`Du bist ${playerName} (${playerColor})`;
+  playerDisplay.textContent = `Du bist ${playerName} (${playerColor})`;
+
   setBackgroundPattern(playerColor, pattern);
 
   const totalFields = gridSize*gridSize;
@@ -242,7 +243,7 @@ startBtn.addEventListener("click",()=>{
   startBtn.style.display="none";
 });
 
-// Grid erstellen
+// 🔹 Grid erstellen
 function createGrid(size,challenges){
   grid.innerHTML="";
   grid.style.gridTemplateColumns=`repeat(${size},96px)`;
@@ -283,7 +284,7 @@ function createGrid(size,challenges){
   }
 }
 
-// Kontrast
+// 🔹 Kontrastfarbe
 function getContrastYIQ(hex){
   hex=hex.replace("#","");
   const r=parseInt(hex.substr(0,2),16);
@@ -293,7 +294,7 @@ function getContrastYIQ(hex){
   return yiq>=128?"black":"white";
 }
 
-// Grid Listener
+// 🔹 Listener Grid
 onValue(ref(db,"grid"), snap=>{
   if(snap.exists()){
     const { gridSize: size, challenges } = snap.val();
@@ -302,40 +303,40 @@ onValue(ref(db,"grid"), snap=>{
   }
 });
 
-// Board Listener
-onValue(ref(db,"board"), snapshot => {
-  const board = snapshot.val() || {};
-
-  document.querySelectorAll(".cell").forEach(cell => {
+// 🔹 Board Listener & Scoreboard
+onValue(ref(db,"board"), snapshot=>{
+  const board = snapshot.val()||{};
+  document.querySelectorAll(".cell").forEach(cell=>{
     const idx = cell.dataset.index;
     const field = board[idx];
-
-    cell.style.border = "2px solid #333";
-    cell.style.background = "#fff";
-    cell.style.color = "black";
+    cell.style.border="2px solid #333";
+    cell.style.background="#fff";
+    cell.style.color="black";
 
     if(field && field.players){
       const playerArr = Object.entries(field.players);
       if(field.exclusivePlayer){
         const player = field.exclusivePlayer;
         cell.style.backgroundColor = field.players[player].color;
-        cell.style.border = "none"; // Rahmen weg
-        cell.style.color = getContrastYIQ(field.players[player].color);
+        cell.style.color=getContrastYIQ(field.players[player].color);
       } else if(playerArr.length>0){
         const colors = playerArr.map(([n,p])=>p.color);
-        const percent = 100 / colors.length;
-        const gradient = colors.map((c,i)=>`${c} ${i*percent}% ${(i+1)*percent}%`).join(", ");
+        const percent = 100/colors.length;
+        const gradient = colors.map((c,i)=>`${c} ${i*percent}% ${(i+1)*percent}%`).join(', ');
         cell.style.background = `linear-gradient(to right, ${gradient})`;
-        cell.style.border = "2px solid #333";
-        cell.style.color = "black";
+        cell.style.color="black";
       }
     }
   });
 
-  // Spieler-Legende
+  // Scoreboard
   const playerCounts = {};
-  Object.values(board).forEach(f => {
-    if(f.players) Object.keys(f.players).forEach(p => playerCounts[p]=(playerCounts[p]||0)+1);
+  Object.values(board).forEach(f=>{
+    if(f.players){
+      Object.keys(f.players).forEach(p=>{
+        playerCounts[p] = (playerCounts[p]||0)+1;
+      });
+    }
   });
 
   const playersArr = [];
@@ -348,33 +349,37 @@ onValue(ref(db,"board"), snapshot => {
     playersArr.push({name, points:playerCounts[name], color});
   });
 
-  if(playerName && !playersArr.find(p=>p.name===playerName)) playersArr.push({name:playerName, points:0, color:playerColor});
+  if(playerName && !playersArr.find(p=>p.name===playerName)){
+    playersArr.push({name:playerName, points:0, color:playerColor});
+  }
+
   playersArr.sort((a,b)=>b.points-a.points);
 
-  let legendHTML = "<ul>";
+  let legendHTML="<ul>";
   playersArr.forEach(p=>{
     const isCurrent = p.name===playerName;
     legendHTML += `<li>
       <span class="color-circle" style="background:${p.color}"></span>
-      <span style="font-weight:${isCurrent?'bold':'normal'}">${p.name}</span>: ${p.points} Punkte
+      <span style="font-weight:${isCurrent ? 'bold':'normal'}">${p.name}</span>: ${p.points} Punkte
     </li>`;
   });
-  legendHTML+="</ul>";
-  playerStatsDiv.innerHTML = legendHTML;
+  legendHTML += "</ul>";
+  playerStatsDiv.innerHTML=legendHTML;
 
+  // Spacer für zentriertes Grid
   const spacer = document.getElementById("spacer");
   spacer.style.width = `${playerStatsDiv.offsetWidth}px`;
 });
 
-// Reset
+// 🔹 Reset Button
 resetBtn.addEventListener("click", ()=>{
   remove(ref(db,"board"));
   const totalFields = gridSize*gridSize;
-  const newChallenges = getRandomChallenges(challengePool, totalFields);
-  set(ref(db,"grid"),{gridSize, challenges:newChallenges});
+  let newChallenges = getRandomChallenges(challengePool, totalFields);
+  newChallenges.sort(()=>0.5-Math.random());
+  set(ref(db,"grid"), {gridSize, challenges:newChallenges});
 });
 
 </script>
 </body>
 </html>
-
