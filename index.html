@@ -57,20 +57,38 @@ input, select, button { font-size:16px; padding:5px; margin:5px; }
 <div class="container">
 <h1>Challenge-Tik-Tac-Toe Multiplayer</h1>
 
-<div>
-<input type="text" id="nameInput" placeholder="Spielername eingeben"><br>
-<input type="color" id="colorInput" value="#3498db"><br>
+<!-- Name + Farbe nebeneinander -->
+<div id="playerSetup" style="display:flex; gap:10px; justify-content:center; align-items:center; margin-bottom:10px;">
+  <input type="text" id="nameInput" placeholder="Spielername eingeben">
+  <input type="color" id="colorInput" value="#3498db">
+</div>
 
-<label>Muster:
-  <select id="patternSelect">
-    <option value="stripes">Streifen</option>
-    <option value="checker">Schachbrett</option>
-    <option value="dots">Punkte</option>
-    <option value="waves">Wellen</option>
-    <option value="gradient">Verlauf</option>
-  </select>
-</label><br>
+<!-- Muster + Feldgröße nebeneinander -->
+<div id="optionsSetup" style="display:flex; gap:20px; justify-content:center; align-items:center; margin-bottom:10px;">
+  <label>Muster:
+    <select id="patternSelect">
+      <option value="stripes">Streifen</option>
+      <option value="checker">Schachbrett</option>
+      <option value="dots">Punkte</option>
+      <option value="waves">Wellen</option>
+      <option value="gradient">Verlauf</option>
+    </select>
+  </label>
 
+  <label>Feldgröße:
+    <select id="gridSize">
+      <option value="3">3x3</option>
+      <option value="4">4x4</option>
+      <option value="5" selected>5x5</option>
+      <option value="6">6x6</option>
+      <option value="7">7x7</option>
+      <option value="8">8x8</option>
+      <option value="9">9x9</option>
+    </select>
+  </label>
+</div>
+
+<!-- Challenge Sets -->
 <fieldset id="challengeSetSelect">
   <legend>Challenge Sets:</legend>
   <label><input type="checkbox" value="Botgames" checked> Botgames</label><br>
@@ -78,22 +96,10 @@ input, select, button { font-size:16px; padding:5px; margin:5px; }
   <label><input type="checkbox" value="Custom-Normal" checked> Custom-Normal</label><br>
 </fieldset>
 
-
-
-<label>Feldgröße:
-  <select id="gridSize">
-    <option value="3">3x3</option>
-    <option value="4">4x4</option>
-    <option value="5" selected>5x5</option>
-    <option value="6">6x6</option>
-    <option value="7">7x7</option>
-    <option value="8">8x8</option>
-    <option value="9">9x9</option>
-  </select>
-</label><br>
-<button id="startBtn">Spiel starten</button>
+<!-- Start Button -->
+<div style="text-align:center; margin-top:10px;">
+  <button id="startBtn">Spiel starten</button>
 </div>
-
 <p id="playerDisplay"></p>
 
 <div class="game-area">
