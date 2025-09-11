@@ -30,7 +30,7 @@ const challengeSetSelect = document.getElementById("challengeSetSelect"); // neu
 // 🔹 Standard-Hintergrund beim Laden
 document.body.style.minHeight = "100vh"; // sicherstellen, dass der body die ganze Höhe hat
 document.body.style.margin = "0";        // keine Ränder stören
-document.body.style.background = "linear-gradient(120deg, #e0e0e0, #f5f5f5, #d0d0d0)";
+document.body.style.background = "linear-gradient(120deg, #e0f0ff, #f5f5f5, #d0e0ff)";
 document.body.style.backgroundAttachment = "fixed"; 
 document.body.style.color = "#000"; // Textfarbe standardmäßig schwarz
 
@@ -292,6 +292,7 @@ if (challengesPool.length === 0) {
   newChallenges.sort(()=>0.5-Math.random());
   set(ref(db,"grid"), {gridSize, challenges:newChallenges});
 });
+
 
 
 
