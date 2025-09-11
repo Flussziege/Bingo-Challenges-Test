@@ -94,6 +94,10 @@ startBtn.addEventListener("click", async () => {
       console.error(`Fehler beim Laden von ${setName}:`, err);
     }
   }
+if (challengesPool.length === 0) {
+  alert("Keine Challenges gefunden! Bitte mindestens ein Set auswählen.");
+  return;
+}
 
   const totalFields = gridSize * gridSize;
   const challenges = getRandomChallenges(challengesPool, totalFields);
@@ -271,9 +275,14 @@ resetBtn.addEventListener("click", async ()=>{
       console.error(`Fehler beim Laden von ${setName}:`, err);
     }
   }
+if (challengesPool.length === 0) {
+  alert("Keine Challenges gefunden! Bitte mindestens ein Set auswählen.");
+  return;
+}
 
   const totalFields = gridSize * gridSize;
   let newChallenges = getRandomChallenges(challengesPool, totalFields);
   newChallenges.sort(()=>0.5-Math.random());
   set(ref(db,"grid"), {gridSize, challenges:newChallenges});
 });
+
