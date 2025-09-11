@@ -258,27 +258,27 @@ function createGrid(size,challenges){
     cell.title=longText;
     cell.textContent=shortText;
 
-    cell.addEventListener("click", async (e)=>{
-      const fieldRef = ref(db,"board/"+i);
-      const snap = await new Promise(res=>onValue(fieldRef,s=>{res(s);},{onlyOnce:true}));
-      const fieldData = snap.val()||{players:{}};
-      const players = fieldData.players||{};
-      const exclusivePlayer = fieldData.exclusivePlayer||null;
-      const isSelected = players[playerName] !== undefined;
+    cell.addEventListener("click", async (e) => {
+  const fieldRef = ref(db, "board/" + i);
+  const snap = await new Promise(res => onValue(fieldRef, s => { res(s); }, { onlyOnce: true }));
+  const fieldData = snap.val() || { players: {} };
+  const players = fieldData.players || {};
+  const exclusivePlayer = fieldData.exclusivePlayer || null;
+  const isSelected = players[playerName] !== undefined;
 
-      if(e.detail===2){
-        if(exclusivePlayer && exclusivePlayer!==playerName) return;
-        set(fieldRef, { players:{[playerName]: {color:playerColor}}, exclusivePlayer: playerName });
-      } else {
-        if(isSelected){
-          remove(ref(db,"board/"+i+"/players/"+playerName));
-          if(exclusivePlayer===playerName) update(fieldRef,{exclusivePlayer:null});
-        } else {
-          if(exclusivePlayer) return;
-          set(ref(db,"board/"+i+"/players/"+playerName), {color:playerColor, exclusive:false});
-        }
-      }
-    });
+  if (e.detail === 2) { // Doppelklick → Exklusiv markieren
+    if (exclusivePlayer && exclusivePlayer !== playerName) return; // bereits exklusiv durch andere
+    set(fieldRef, { players: { [playerName]: { color: playerColor } }, exclusivePlayer: playerName });
+  } else { // Einfachklick → normale Auswahl
+    if (isSelected) {
+      remove(ref(db, `board/${i}/players/${playerName}`));
+      if (exclusivePlayer === playerName) update(fieldRef, { exclusivePlayer: null });
+    } else {
+      if (exclusivePlayer) return; // darf niemand normalen Marker setzen, wenn exklusiv
+      set(ref(db, `board/${i}/players/${playerName}`), { color: playerColor, exclusive: false });
+    }
+  }
+});
 
     grid.appendChild(cell);
   }
@@ -383,3 +383,4 @@ resetBtn.addEventListener("click", ()=>{
 </script>
 </body>
 </html>
+
