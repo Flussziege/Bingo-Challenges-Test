@@ -36,8 +36,8 @@ import { CustomNormal } from './data/CustomNormal.js';
 // Alle Challenges zusammen
 const challengeSets = {
   "Botgames": Botgames,
-  "CustomARAM": CustomARAM,
-  "CustomNormal": CustomNormal
+  "CustomARAM": Custom-ARAM,
+  "CustomNormal": Custom-Normal
 };
 
 
@@ -292,6 +292,7 @@ resetBtn.addEventListener("click", async ()=>{
 
 
 </script>
+
 
 
 
