@@ -1,4 +1,4 @@
-export const CustomARAM = [
+export const challenges = [
   ["Help?", "Töte Baron Nashor alleine."],
   ["Dragon Hunter", "Töte 3 Drachen im Spiel."],
   ["Tower Smacker", "Verursache 10k Schaden an Türmen."],
