@@ -1,4 +1,4 @@
-export const Botgames = [
+export const challenges = [
   ["Item Rush", "Kaufe ein Full-Item-Build zuerst im Team."],
   ["First Tower", "Nimm den ersten Turm des Spiels."],
   ["Vision Control", "Erhalte 80 Vision Score"],
