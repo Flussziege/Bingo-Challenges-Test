@@ -30,8 +30,8 @@ const challengeSetSelect = document.getElementById("challengeSetSelect"); // neu
 
 // 🔹 Externe Challenge-Dateien importieren
 import { Botgames } from './data/Botgames.js';
-import { CustomARAM } from './data/CustomARAM.js';
-import { CustomNormal } from './data/CustomNormal.js';
+import { CustomARAM } from './data/Custom-ARAM.js';
+import { CustomNormal } from './data/Custom-Normal.js';
 
 // Alle Challenges zusammen
 const challengeSets = {
@@ -292,6 +292,7 @@ resetBtn.addEventListener("click", async ()=>{
 
 
 </script>
+
 
 
 
