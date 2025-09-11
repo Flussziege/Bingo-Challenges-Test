@@ -1,4 +1,3 @@
-<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getDatabase, ref, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
@@ -278,13 +277,3 @@ resetBtn.addEventListener("click", async ()=>{
   newChallenges.sort(()=>0.5-Math.random());
   set(ref(db,"grid"), {gridSize, challenges:newChallenges});
 });
-
-
-</script>
-
-
-
-
-
-
-
