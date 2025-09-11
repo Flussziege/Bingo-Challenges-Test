@@ -77,8 +77,13 @@ function setBackgroundPattern(color, pattern){
 }
 
 // 🔹 Start Button
-startBtn.addEventListener("click",()=>{
-  if(!nameInput.value.trim()){alert("Bitte gib deinen Namen ein!"); return;}
+// 🔹 Start Button
+startBtn.addEventListener("click", async () => {
+  if (!nameInput.value.trim()) { 
+    alert("Bitte gib deinen Namen ein!"); 
+    return; 
+  }
+
   playerName = nameInput.value.trim();
   playerColor = colorInput.value;
   gridSize = parseInt(gridSizeInput.value);
@@ -87,24 +92,36 @@ startBtn.addEventListener("click",()=>{
 
   setBackgroundPattern(playerColor, pattern);
 
-  // ✅ Ausgewählte Challenge Sets zusammenfügen
-  const selectedSets = Array.from(challengeSetSelect.selectedOptions).map(o => o.value);
-  let selectedChallenges = [];
-  selectedSets.forEach(setName => {
-    if(challengeSets[setName]) selectedChallenges.push(...challengeSets[setName]);
-  });
+  // ✅ Ausgewählte Challenge-Sets aus Checkboxen auslesen
+  const selectedSets = Array.from(document.querySelectorAll("#challengeSetSelect input[type=checkbox]:checked"))
+                            .map(cb => cb.value);
 
-  const totalFields = gridSize*gridSize;
-  const challenges = getRandomChallenges(selectedChallenges, totalFields);
-  set(ref(db,"grid"), { gridSize, challenges });
+  // 🔹 Alle Challenges aus den ausgewählten Sets zusammenführen
+  let challengesPool = [];
+  for (const setName of selectedSets) {
+    try {
+      const module = await import(`./challenges/${setName}.js`);
+      if (module.challenges) {
+        challengesPool = challengesPool.concat(module.challenges);
+      }
+    } catch (err) {
+      console.error(`Fehler beim Laden von ${setName}:`, err);
+    }
+  }
 
-  nameInput.style.display="none";
-  colorInput.style.display="none";
-  patternSelect.style.display="none";
-  gridSizeInput.style.display="none";
-  challengeSetSelect.style.display="none"; // Menü ausblenden
-  startBtn.style.display="none";
+  const totalFields = gridSize * gridSize;
+  const challenges = getRandomChallenges(challengesPool, totalFields);
+  set(ref(db, "grid"), { gridSize, challenges });
+
+  // Formular ausblenden
+  nameInput.style.display = "none";
+  colorInput.style.display = "none";
+  patternSelect.style.display = "none";
+  gridSizeInput.style.display = "none";
+  document.getElementById("challengeSetSelect").style.display = "none";
+  startBtn.style.display = "none";
 });
+
 
 // 🔹 Grid erstellen (unverändert, inkl. Doppelklick)
 function createGrid(size,challenges){
@@ -258,5 +275,6 @@ resetBtn.addEventListener("click", ()=>{
 });
 
 </script>
+
 
 
