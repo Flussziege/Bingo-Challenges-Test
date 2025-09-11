@@ -1,5 +1,5 @@
 // 🔹 Challenge-Pool
-export const CustomNormal = [
+export const challenges = [
   ["Gold Hunter", "Bekomme ein Shutdown von 700 Gold auf deinen Kopf ausgesetzt."],
   ["Damage Dealer", "Habe mehr als 50k Schaden."],
   ["Death Count", "Habe mehr als 20 Tode."],
