@@ -29,14 +29,17 @@ const patternSelect = document.getElementById("patternSelect");
 const challengeSetSelect = document.getElementById("challengeSetSelect"); // neues Menü
 
 // 🔹 Externe Challenge-Dateien importieren
-import { challenges1 } from './data/challenges1.js';
-import { challenges2 } from './data/challenges2.js';
+import { Botgames } from './data/Botgames.js';
+import { CustomARAM } from './data/CustomARAM.js';
+import { CustomNormal } from './data/CustomNormal.js';
 
 // Alle Challenges zusammen
 const challengeSets = {
-  "Set 1": challenges1,
-  "Set 2": challenges2
+  "Botgames": Botgames,
+  "CustomARAM": CustomARAM,
+  "CustomNormal": CustomNormal
 };
+
 
 // 🔹 Zufällige Auswahl
 function getRandomChallenges(pool, count) {
@@ -255,4 +258,5 @@ resetBtn.addEventListener("click", ()=>{
 });
 
 </script>
+
 
