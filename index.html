@@ -37,7 +37,13 @@ body { font-family: sans-serif; margin: 0; padding: 0; }
   font-size: 18px; 
 }
 #playerStats ul { list-style: none; padding: 0; margin:0; }
-#playerStats li { margin-bottom: 10px; display: flex; align-items: center; }
+#playerStats li {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center; /* zentriert Kreis und Text */
+  gap: 8px;            /* Abstand zwischen Kreis und Name */
+  box-sizing: border-box; /* Rahmen und Padding wirken nicht verschiebend */
+}
 .color-circle { width: 24px; height: 24px; border-radius: 50%; display: inline-block; margin-right: 10px; }
 input, select, button { font-size:16px; padding:5px; margin:5px; }
 @media (max-width:600px){
@@ -355,8 +361,8 @@ onValue(ref(db,"board"), snapshot=>{
   let legendHTML="<ul>";
   playersArr.forEach(p=>{
     const highlight = (p.name===playerName) 
-      ? `style="border:2px solid ${p.color}; padding:4px; border-radius:8px;"` 
-      : "";
+  ? `style="border:2px solid ${p.color}; border-radius:8px; padding:2px;"` 
+  : "";
     legendHTML+=`<li ${highlight}>
       <span class="color-circle" style="background:${p.color}"></span>
       <span style="font-weight:bold">${p.name}</span>: ${p.points} Punkte
@@ -378,6 +384,7 @@ resetBtn.addEventListener("click", ()=>{
 </script>
 </body>
 </html>
+
 
 
 
