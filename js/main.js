@@ -77,7 +77,6 @@ function setBackgroundPattern(color, pattern){
 }
 
 // 🔹 Start Button
-// 🔹 Start Button
 startBtn.addEventListener("click", async () => {
   if (!nameInput.value.trim()) { 
     alert("Bitte gib deinen Namen ein!"); 
@@ -100,7 +99,7 @@ startBtn.addEventListener("click", async () => {
   let challengesPool = [];
   for (const setName of selectedSets) {
     try {
-      const module = await import(`./challenges/${setName}.js`);
+      const module = await import(`./data/${setName}.js`);
       if (module.challenges) {
         challengesPool = challengesPool.concat(module.challenges);
       }
@@ -266,15 +265,34 @@ onValue(ref(db,"board"), snapshot=>{
   spacer.style.width = `${playerStatsDiv.offsetWidth}px`;
 });
 // 🔹 Reset Button
-resetBtn.addEventListener("click", ()=>{
+resetBtn.addEventListener("click", async ()=>{
   remove(ref(db,"board"));
-  const totalFields = gridSize*gridSize;
-  let newChallenges = getRandomChallenges(challengePool, totalFields);
+
+  // ausgewählte Sets erneut auslesen
+  const selectedSets = Array.from(document.querySelectorAll("#challengeSetSelect input[type=checkbox]:checked"))
+                            .map(cb => cb.value);
+
+  let challengesPool = [];
+  for (const setName of selectedSets) {
+    try {
+      const module = await import(`./data/${setName}.js`);
+      if (module.challenges) {
+        challengesPool = challengesPool.concat(module.challenges);
+      }
+    } catch (err) {
+      console.error(`Fehler beim Laden von ${setName}:`, err);
+    }
+  }
+
+  const totalFields = gridSize * gridSize;
+  let newChallenges = getRandomChallenges(challengesPool, totalFields);
   newChallenges.sort(()=>0.5-Math.random());
   set(ref(db,"grid"), {gridSize, challenges:newChallenges});
 });
 
+
 </script>
+
 
 
 
