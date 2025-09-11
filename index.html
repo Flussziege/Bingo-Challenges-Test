@@ -343,7 +343,7 @@ onValue(ref(db,"board"), snapshot=>{
       if(f.players && f.players[name]){ color=f.players[name].color; break; }
     }
     const points = playerCounts[name]||0;
-    legendHTML+=`<li><span class="color-circle" style="background:${color}"></span>${name}: ${points} Punkte</li>`;
+    legendHTML+=`<li><span class="color-circle" style="background:${color}"></span><span style="font-weight:bold">${name}</span>: ${points} Punkte</li>`;
   });
   legendHTML+="</ul>";
   playerStatsDiv.innerHTML = legendHTML;
@@ -361,5 +361,6 @@ resetBtn.addEventListener("click", ()=>{
 </script>
 </body>
 </html>
+
 
 
