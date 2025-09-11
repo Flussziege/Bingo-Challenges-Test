@@ -86,7 +86,7 @@ startBtn.addEventListener("click", async () => {
   let challengesPool = [];
   for (const setName of selectedSets) {
     try {
-      const module = await import(`../data/${setName}.js`);
+      const module = await import(`./data/${setName}.js`);
       if (module.challenges) {
         challengesPool = challengesPool.concat(module.challenges);
       }
@@ -266,7 +266,7 @@ resetBtn.addEventListener("click", async ()=>{
   let challengesPool = [];
   for (const setName of selectedSets) {
     try {
-      const module = await import(`../data/${setName}.js`);
+      const module = await import(`./data/${setName}.js`);
 
       if (module.challenges) {
         challengesPool = challengesPool.concat(module.challenges);
@@ -285,4 +285,5 @@ if (challengesPool.length === 0) {
   newChallenges.sort(()=>0.5-Math.random());
   set(ref(db,"grid"), {gridSize, challenges:newChallenges});
 });
+
 
