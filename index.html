@@ -311,27 +311,36 @@ onValue(ref(db,"grid"), snap=>{
 });
 
 // 🔹 Board Listener & Scoreboard
+// 🔹 Board Listener & Scoreboard
 onValue(ref(db,"board"), snapshot=>{
   const board = snapshot.val()||{};
+
   document.querySelectorAll(".cell").forEach(cell=>{
     const idx = cell.dataset.index;
     const field = board[idx];
-    cell.style.border="2px solid #333";
-    cell.style.background="#fff";
-    cell.style.color="black";
+
+    // Standard zurücksetzen
+    cell.style.border = "2px solid #333";
+    cell.style.background = "#fff";
+    cell.style.color = "black";
 
     if(field && field.players){
       const playerArr = Object.entries(field.players);
+
       if(field.exclusivePlayer){
+        // Exklusiver Spieler → goldener Rahmen
         const player = field.exclusivePlayer;
         cell.style.backgroundColor = field.players[player].color;
-        cell.style.color=getContrastYIQ(field.players[player].color);
-      } else if(playerArr.length>0){
+        cell.style.color = getContrastYIQ(field.players[player].color);
+        cell.style.border = "3px solid gold";
+      } else if(playerArr.length > 0){
+        // Mehrere Spieler → Gradient
         const colors = playerArr.map(([n,p])=>p.color);
-        const percent = 100/colors.length;
+        const percent = 100 / colors.length;
         const gradient = colors.map((c,i)=>`${c} ${i*percent}% ${(i+1)*percent}%`).join(', ');
         cell.style.background = `linear-gradient(to right, ${gradient})`;
-        cell.style.color="black";
+        cell.style.color = "black";
+        cell.style.border = "2px solid #333";
       }
     }
   });
@@ -377,7 +386,6 @@ onValue(ref(db,"board"), snapshot=>{
   const spacer = document.getElementById("spacer");
   spacer.style.width = `${playerStatsDiv.offsetWidth}px`;
 });
-
 // 🔹 Reset Button
 resetBtn.addEventListener("click", ()=>{
   remove(ref(db,"board"));
@@ -390,5 +398,6 @@ resetBtn.addEventListener("click", ()=>{
 </script>
 </body>
 </html>
+
 
 
