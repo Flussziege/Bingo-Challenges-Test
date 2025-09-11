@@ -213,8 +213,8 @@ function setBackgroundPattern(color, pattern){
 }
 
 // 🔹 Start Button
-startBtn.addEventListener("click",()=>{
-  if(!nameInput.value.trim()){
+startBtn.addEventListener("click", () => {
+  if (!nameInput.value.trim()) {
     alert("Bitte gib deinen Namen ein!");
     return;
   }
@@ -239,6 +239,18 @@ startBtn.addEventListener("click",()=>{
     color: playerColor,
     points: 0
   });
+
+  // 👉 Grid sofort lokal anzeigen (ohne auf Firebase zu warten)
+  createGrid(gridSize, challenges);
+
+  // Eingabe-Elemente ausblenden
+  nameInput.style.display = "none";
+  colorInput.style.display = "none";
+  patternSelect.style.display = "none";
+  gridSizeInput.style.display = "none";
+  startBtn.style.display = "none";
+});
+
 
   // Eingabe-Elemente ausblenden
   nameInput.style.display = "none";
@@ -369,6 +381,7 @@ resetBtn.addEventListener("click", ()=>{
 </script>
 </body>
 </html>
+
 
 
 
