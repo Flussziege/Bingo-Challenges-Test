@@ -299,8 +299,8 @@ onValue(ref(db,"grid"), snap=>{
 // 🔹 Board Listener & Spieler-Legende
 onValue(ref(db,"board"), snapshot=>{
   const board = snapshot.val()||{};
-  
-  // Grid-Farben
+
+  // 🔹 Grid-Farben (bleibt gleich)
   document.querySelectorAll(".cell").forEach(cell=>{
     const idx = cell.dataset.index;
     const field = board[idx];
@@ -325,12 +325,46 @@ onValue(ref(db,"board"), snapshot=>{
     }
   });
 
-  // Spieler-Legende & Punkte
+  // 🔹 Spieler-Legende & Punkte (neu einfügen)
   const playerCounts={};
   Object.values(board).forEach(f=>{
-    if(f.players) Object.keys(f.players).forEach(p=>{ playerCounts[p]=(playerCounts[p]||0)+1; });
+    if(f.players) Object.keys(f.players).forEach(p=>{ 
+      playerCounts[p]=(playerCounts[p]||0)+1; 
+    });
   });
 
+  const playersArr = [];
+  Object.keys(playerCounts).forEach(name=>{
+    let color="#000";
+    for(const f of Object.values(board)){
+      if(f.players && f.players[name]){
+        color=f.players[name].color;
+        break;
+      }
+    }
+    if(name===playerName && color==="#000") color=playerColor;
+    playersArr.push({name, points:playerCounts[name], color});
+  });
+
+  if(playerName && !playersArr.find(p=>p.name===playerName)){
+    playersArr.push({name: playerName, points:0, color: playerColor});
+  }
+
+  playersArr.sort((a,b)=>b.points - a.points);
+
+  let legendHTML="<ul>";
+  playersArr.forEach(p=>{
+    const highlight = (p.name===playerName) 
+      ? `style="border:2px solid ${p.color}; padding:4px; border-radius:8px;"` 
+      : "";
+    legendHTML+=`<li ${highlight}>
+      <span class="color-circle" style="background:${p.color}"></span>
+      <span style="font-weight:bold">${p.name}</span>: ${p.points} Punkte
+    </li>`;
+  });
+  legendHTML+="</ul>";
+  playerStatsDiv.innerHTML = legendHTML;
+});
   // 🔹 Alle Spieler aus dem Board sammeln (auch die mit 0 Punkten)
   const allPlayers = new Set();
   Object.values(board).forEach(f=>{
@@ -372,6 +406,7 @@ resetBtn.addEventListener("click", ()=>{
 </script>
 </body>
 </html>
+
 
 
 
