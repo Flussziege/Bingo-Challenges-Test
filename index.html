@@ -303,75 +303,74 @@ onValue(ref(db,"grid"), snap=>{
 });
 
 // 🔹 Board Listener & Spieler-Legende
-onValue(ref(db,"board"), snapshot=>{
-  const board = snapshot.val()||{};
+onValue(ref(db,"board"), snapshot => {
+  const board = snapshot.val() || {};
 
-  // 🔹 Grid-Farben (bleibt gleich)
-  document.querySelectorAll(".cell").forEach(cell=>{
+  // 🔹 Grid-Farben
+  document.querySelectorAll(".cell").forEach(cell => {
     const idx = cell.dataset.index;
     const field = board[idx];
-    cell.style.border="2px solid #333";
-    cell.style.background="#fff";
-    cell.style.color="black";
+    cell.style.border = "2px solid #333";
+    cell.style.background = "#fff";
+    cell.style.color = "black";
 
-    if(field && field.players){
+    if (field && field.players) {
       const playerArr = Object.entries(field.players);
-      if(field.exclusivePlayer){
+      if (field.exclusivePlayer) {
         const player = field.exclusivePlayer;
         cell.style.backgroundColor = field.players[player].color;
-        cell.style.border="3px solid gold";
-        cell.style.color=getContrastYIQ(field.players[player].color);
-      } else if(playerArr.length>0){
-        const colors = playerArr.map(([n,p])=>p.color);
-        const percent = 100/colors.length;
-        const gradient = colors.map((c,i)=>`${c} ${i*percent}% ${(i+1)*percent}%`).join(", ");
-        cell.style.background=`linear-gradient(to right, ${gradient})`;
-        cell.style.color="black";
+        cell.style.color = getContrastYIQ(field.players[player].color);
+      } else if (playerArr.length > 0) {
+        const colors = playerArr.map(([n, p]) => p.color);
+        const percent = 100 / colors.length;
+        const gradient = colors.map((c, i) => `${c} ${i*percent}% ${(i+1)*percent}%`).join(", ");
+        cell.style.background = `linear-gradient(to right, ${gradient})`;
+        cell.style.color = "black";
       }
     }
   });
 
-  // 🔹 Spieler-Legende & Punkte (neu einfügen)
-  const playerCounts={};
-  Object.values(board).forEach(f=>{
-    if(f.players) Object.keys(f.players).forEach(p=>{ 
-      playerCounts[p]=(playerCounts[p]||0)+1; 
+  // 🔹 Spieler-Legende & Punkte
+  const playerCounts = {};
+  Object.values(board).forEach(f => {
+    if (f.players) Object.keys(f.players).forEach(p => {
+      playerCounts[p] = (playerCounts[p] || 0) + 1;
     });
   });
 
   const playersArr = [];
-  Object.keys(playerCounts).forEach(name=>{
-    let color="#000";
-    for(const f of Object.values(board)){
-      if(f.players && f.players[name]){
-        color=f.players[name].color;
+  Object.keys(playerCounts).forEach(name => {
+    let color = "#000";
+    for (const f of Object.values(board)) {
+      if (f.players && f.players[name]) {
+        color = f.players[name].color;
         break;
       }
     }
-    if(name===playerName && color==="#000") color=playerColor;
-    playersArr.push({name, points:playerCounts[name], color});
+    if (name === playerName && color === "#000") color = playerColor;
+    playersArr.push({name, points: playerCounts[name], color});
   });
 
-  if(playerName && !playersArr.find(p=>p.name===playerName)){
-    playersArr.push({name: playerName, points:0, color: playerColor});
+  // Falls eigener Spieler noch nicht in der Liste ist
+  if (playerName && !playersArr.find(p => p.name === playerName)) {
+    playersArr.push({name: playerName, points: 0, color: playerColor});
   }
 
-  playersArr.sort((a,b)=>b.points - a.points);
+  // Sortierung nach Punkten
+  playersArr.sort((a, b) => b.points - a.points);
 
-  let legendHTML="<ul>";
-  playersArr.forEach(p=>{
-    const highlight = (p.name===playerName) 
-  ? `style="border:2px solid ${p.color}; border-radius:8px; padding:2px;"` 
-  : "";
-    legendHTML+=`<li ${highlight}>
+  // HTML erzeugen
+  let legendHTML = "<ul>";
+  playersArr.forEach(p => {
+    const isCurrent = p.name === playerName;
+    legendHTML += `<li>
       <span class="color-circle" style="background:${p.color}"></span>
-      <span style="font-weight:bold">${p.name}</span>: ${p.points} Punkte
+      <span style="font-weight:${isCurrent ? 'bold' : 'normal'}">${p.name}</span>: ${p.points} Punkte
     </li>`;
   });
-  legendHTML+="</ul>";
+  legendHTML += "</ul>";
   playerStatsDiv.innerHTML = legendHTML;
 });
-
 // 🔹 Reset Button
 resetBtn.addEventListener("click", ()=>{
   remove(ref(db,"board"));
@@ -384,6 +383,7 @@ resetBtn.addEventListener("click", ()=>{
 </script>
 </body>
 </html>
+
 
 
 
