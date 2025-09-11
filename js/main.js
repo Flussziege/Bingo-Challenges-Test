@@ -28,18 +28,6 @@ const playerStatsDiv = document.getElementById("playerStats");
 const patternSelect = document.getElementById("patternSelect");
 const challengeSetSelect = document.getElementById("challengeSetSelect"); // neues Menü
 
-// 🔹 Externe Challenge-Dateien importieren
-import { Botgames } from './data/Botgames.js';
-import { CustomARAM } from './data/Custom-ARAM.js';
-import { CustomNormal } from './data/Custom-Normal.js';
-
-// Alle Challenges zusammen
-const challengeSets = {
-  "Botgames": Botgames,
-  "CustomARAM": Custom-ARAM,
-  "CustomNormal": Custom-Normal
-};
-
 
 // 🔹 Zufällige Auswahl
 function getRandomChallenges(pool, count) {
@@ -99,7 +87,7 @@ startBtn.addEventListener("click", async () => {
   let challengesPool = [];
   for (const setName of selectedSets) {
     try {
-      const module = await import(`./data/${setName}.js`);
+      const module = await import(`../data/${setName}.js`);
       if (module.challenges) {
         challengesPool = challengesPool.concat(module.challenges);
       }
@@ -275,7 +263,8 @@ resetBtn.addEventListener("click", async ()=>{
   let challengesPool = [];
   for (const setName of selectedSets) {
     try {
-      const module = await import(`./data/${setName}.js`);
+      const module = await import(`../data/${setName}.js`);
+
       if (module.challenges) {
         challengesPool = challengesPool.concat(module.challenges);
       }
@@ -292,6 +281,7 @@ resetBtn.addEventListener("click", async ()=>{
 
 
 </script>
+
 
 
 
