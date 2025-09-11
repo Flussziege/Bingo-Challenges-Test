@@ -1,5 +1,5 @@
 // 🔹 Challenge-Pool
-export const challenges1 = [
+export const CustomNormal = [
   ["Gold Hunter", "Bekomme ein Shutdown von 700 Gold auf deinen Kopf ausgesetzt."],
   ["Damage Dealer", "Habe mehr als 50k Schaden."],
   ["Death Count", "Habe mehr als 20 Tode."],
@@ -37,24 +37,4 @@ export const challenges1 = [
   ["Gold Lead", "Baue einen Goldvorsprung von 5k auf."],
   ["Epic Save", "Rette ein Teammitglied vor dem Tod."],
   ["Tower Destroyer", "Zerstöre 3 gegnerische Türme."],
-  ["Item Rush", "Kaufe ein Full-Item-Build zuerst im Team."],
-  ["First Tower", "Nimm den ersten Turm des Spiels."],
-  ["Vision Control", "Erhalte 80 Vision Score"],
-  ["Enemy Jungler Dead", "Töte den gegnerischen Jungler 3x."],
-  ["Lane Domination", "Gewinne deine Lane (min 18) ohne zu sterben."],
-  ["Quick Recall", "Recall unter 10 Sekunden nach Kill."],
-  ["Epic Ult", "Treffe mindestens 3 Gegner mit deiner Ultimate."],
-  ["Champion Master", "Spiele deinen Lieblingschampion perfekt. (keine Tode/Assist)"],
-  ["Soul Sweep", "Sichere ein Objective, ohne dass Gegner einen Drachen bekommen."],
-  ["Last Tower", "Zerstöre den gegnerischen Nexus (mindestens 50 Gold erhalten)."],
-  ["Help?", "Töte Baron Nashor alleine."],
-  ["Dragon Hunter", "Töte 3 Drachen im Spiel."],
-  ["Tower Smacker", "Verursache 10k Schaden an Türmen."],
-  ["Healing Done", "Heile 2000 HP während des Spiels."],
-  ["Solo Baron", "Nimm Baron Nashor fast alleine."],
-  ["Backdoor Genius", "Gewinne das Spiel, während du den Gegner-Turm unbemerkt zerstörst."],
-  ["First Tower Sniper", "Zerstöre den ersten gegnerischen Turm als erstes im Spiel."],
-  ["Flashless Killer", "Erziele einen Kill ohne Flash."],
-  ["Tower Focus", "Verursache 5k Schaden an einem Turm."],
-  ["Heal Overload", "Heile 1500 HP innerhalb von 5 Minuten."]
 ];
