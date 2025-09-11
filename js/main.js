@@ -27,12 +27,10 @@ const playerStatsDiv = document.getElementById("playerStats");
 const patternSelect = document.getElementById("patternSelect");
 const challengeSetSelect = document.getElementById("challengeSetSelect"); // neues Menü
 
-// 🔹 Standard-Hintergrund beim Laden
-document.body.style.minHeight = "100vh"; // sicherstellen, dass der body die ganze Höhe hat
-document.body.style.margin = "0";        // keine Ränder stören
-document.body.style.background = "linear-gradient(120deg, #e0f0ff, #f5f5f5, #d0e0ff)";
-document.body.style.backgroundAttachment = "fixed"; 
-document.body.style.color = "#000"; // Textfarbe standardmäßig schwarz
+// 🔹 Standard-Hintergrund beim Laden (Himmelblau → Weiß, diagonal)
+document.body.style.background = "linear-gradient(45deg, #87CEEB, #ffffff)";
+document.body.style.backgroundAttachment = "fixed"; // damit der Verlauf fix bleibt
+document.body.style.color = "#fff"; // Text zunächst weiß
 
 
 
@@ -292,6 +290,7 @@ if (challengesPool.length === 0) {
   newChallenges.sort(()=>0.5-Math.random());
   set(ref(db,"grid"), {gridSize, challenges:newChallenges});
 });
+
 
 
 
