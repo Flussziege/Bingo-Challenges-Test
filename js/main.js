@@ -27,6 +27,11 @@ const playerStatsDiv = document.getElementById("playerStats");
 const patternSelect = document.getElementById("patternSelect");
 const challengeSetSelect = document.getElementById("challengeSetSelect"); // neues Menü
 
+// 🔹 Standard-Hintergrund beim Laden
+document.body.style.background = "linear-gradient(120deg, #e0e0e0, #f5f5f5, #d0d0d0)";
+document.body.style.backgroundAttachment = "fixed"; // Damit der Verlauf fix bleibt
+document.body.style.color = "#000"; // Textfarbe standardmäßig schwarz
+
 
 // 🔹 Zufällige Auswahl
 function getRandomChallenges(pool, count) {
@@ -284,6 +289,7 @@ if (challengesPool.length === 0) {
   newChallenges.sort(()=>0.5-Math.random());
   set(ref(db,"grid"), {gridSize, challenges:newChallenges});
 });
+
 
 
 
