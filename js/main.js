@@ -84,6 +84,10 @@ startBtn.addEventListener("click", async () => {
 
   setBackgroundPattern(playerColor, pattern);
 
+  
+// Textfarbe zurück auf schwarz nach Spielstart
+document.body.style.color = "#000";
+
   // ✅ Ausgewählte Challenge-Sets aus Checkboxen auslesen
   const selectedSets = Array.from(document.querySelectorAll("#challengeSetSelect input[type=checkbox]:checked"))
                             .map(cb => cb.value);
@@ -290,6 +294,7 @@ if (challengesPool.length === 0) {
   newChallenges.sort(()=>0.5-Math.random());
   set(ref(db,"grid"), {gridSize, challenges:newChallenges});
 });
+
 
 
 
