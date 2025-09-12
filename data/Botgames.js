@@ -1,12 +1,8 @@
 export const challenges = [
-  ["Item Rush", "Kaufe ein Full-Item-Build zuerst im Team."],
-  ["First Tower", "Nimm den ersten Turm des Spiels."],
-  ["Vision Control", "Erhalte 80 Vision Score"],
+  ["Penta Slayer", "Erziele einen Penta Kill."],
   ["Enemy Jungler Dead", "Töte den gegnerischen Jungler 3x."],
-  ["Lane Domination", "Gewinne deine Lane (min 18) ohne zu sterben."],
-  ["Quick Recall", "Recall unter 10 Sekunden nach Kill."],
-  ["Epic Ult", "Treffe mindestens 3 Gegner mit deiner Ultimate."],
   ["Champion Master", "Spiele deinen Lieblingschampion perfekt. (keine Tode/Assist)"],
-  ["Soul Sweep", "Sichere ein Objective, ohne dass Gegner einen Drachen bekommen."],
-  ["Last Tower", "Zerstöre den gegnerischen Nexus (mindestens 50 Gold erhalten)."],
+  ["Flashless Killer", "Gewinne ohne Flash."],
+  ["CS Master", "Erreiche 10 CS pro Minute im Spiel."],
+  ["Yes, you!", "Töte deinen Lanegegner 3x ohne Unterbrechung (kein anderer Kill dazwischen von irgendwem)"],
 ];
