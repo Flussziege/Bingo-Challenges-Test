@@ -3,15 +3,15 @@ import { getDatabase, ref, set, onValue, remove, update } from "https://www.gsta
 
 // 🔹 Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyCDGnsgg1muZSLsiogP0AydwfRMmnL-rC0",
-  authDomain: "lol-bingo.firebaseapp.com",
-  databaseURL: "https://lol-bingo-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "lol-bingo",
-  storageBucket: "lol-bingo.firebasestorage.app",
-  messagingSenderId: "346023051769",
-  appId: "1:346023051769:web:3bd5bfa276189114d93d28",
-  measurementId: "G-MZ52BB5PD5"
+  apiKey: "AIzaSyC0DM0bdEMGjREUfC4ahdm7-kumaHxzC3c",
+  authDomain: "lol-bingo-test.firebaseapp.com",
+  databaseURL: "https://lol-bingo-test-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "lol-bingo-test",
+  storageBucket: "lol-bingo-test.firebasestorage.app",
+  messagingSenderId: "982372013204",
+  appId: "1:982372013204:web:494dea8328497744bdd081"
 };
+
 
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -300,6 +300,7 @@ if (challengesPool.length === 0) {
   newChallenges.sort(()=>0.5-Math.random());
   set(ref(db,"grid"), {gridSize, challenges:newChallenges});
 });
+
 
 
 
