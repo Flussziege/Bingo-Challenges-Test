@@ -66,7 +66,7 @@ function setBackgroundPattern(color, pattern){
       document.body.style.background = `linear-gradient(120deg, ${color}33, ${color}11)`;
       break;
     case "image": // 🔹 neues Muster
-      document.body.style.background = `${color} url("./images/SHrek.png") center/cover no-repeat`;
+      document.body.style.background = `${color} url("images/SHrek.png") center/cover no-repeat`;
       break;
   }
   document.body.style.backgroundAttachment="fixed";
@@ -298,6 +298,7 @@ if (challengesPool.length === 0) {
   newChallenges.sort(()=>0.5-Math.random());
   set(ref(db,"grid"), {gridSize, challenges:newChallenges});
 });
+
 
 
 
