@@ -12,6 +12,8 @@ const firebaseConfig = {
   appId: "1:346023051769:web:3bd5bfa276189114d93d28",
   measurementId: "G-MZ52BB5PD5"
 };
+
+
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getDatabase(firebaseApp);
 
@@ -298,6 +300,7 @@ if (challengesPool.length === 0) {
   newChallenges.sort(()=>0.5-Math.random());
   set(ref(db,"grid"), {gridSize, challenges:newChallenges});
 });
+
 
 
 
