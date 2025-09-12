@@ -45,3 +45,4 @@ export const challenges = [
   ["Tower Destroyer", "Zerstöre 3 gegnerische Türme."],
   ["Carry", "Habe mehr als 50% der Kills."],
 ];
+
